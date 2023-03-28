@@ -7,7 +7,7 @@ app.use(express.urlencoded({extended:true}))
 
 app.use('/user', require('./routes/user'))
 app.use('/item', require('./routes/items'))
-// app.use('/order', require('./constrollers/orders'))
+app.use('/order', require('./routes/order'))
 
 app.get("/",(req,res)=>{
     console.log("Test root api running")

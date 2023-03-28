@@ -1,85 +1,96 @@
+const { where } = require('sequelize')
 const {User} = require('../models')
 
-exports.register = async(req,res,next)=>{
+exports.register = async (req,res,next)=>{
     try {
         User.create({
             username: req.body.username,
-            password: req.body.password,
-            email: req.body.email
-        }).then(item => {
-            console.log(item)
-            return res.status(200).json(item)
+            email: req.body.email,
+            password: req.body.password
         })
-        // return res.status(200).json(response)
-    } catch (error) {
-        console.log(error)
-        return req.status(500).json(`server error: ${error}`)
-    }
-}
-exports.findAll = async(req,res,next)=>{
-    try {
-        User.findAll()
-        .then(items => {
-            console.log(items)
-            return res.status(200).json(items)
+        .then(respon=>{
+            console.log(respon)
+            return res.json(respon)
         })
-    } catch (error) {
+       } catch (error) {
         console.log(error)
-        return req.status(500).json(`server error: ${error}`)
-    }
+            return res.json(error)
+        }
 }
-exports.login = async(req,res,next)=>{
+
+
+exports.login = async (req,res,next)=>{
     try {
-        const foundUser = await User.findOne({where : {email:req.body.email}})
-        if (foundUser.password == req.body.password){
-            return res.status(200).json(`login seccess, welcome ${foundUser.username}`)
+        const login = await User.findOne({ where : { email : req.body.email}})
+        if (login && login.password === req.body.password ) {
+            return res.json(`login sukses !!!, selamat datang ${login.username}`)
         } else {
-            return res.status(200).json(`login failed, email and password not match`)
+            return res.json(`maaf masukan data dengan benar !!!`)
         }
     } catch (error) {
         console.log(error)
-        return req.status(500).json(`server error: ${error}`)
+        return res.json(error)
     }
+next() 
 }
 
-exports.RemoveAccount = async(req,res,next)=>{
+exports.update = async (req, res, next) => {
     try {
-        const foundUser = await User.findOne({where : {id:req.body.email}})
-        if (foundUser.password == req.body.password){
-            User.destroy({
+      const { email, username, password } = req.body;
+      const updates = await User.update({ password }, { where: { email, username } });
+      if (updates[0] === 0) {
+        return res.status(404).json({ message: 'update gagal !!!' });
+      }
+      return res.json({ message: 'update sukses !!!' });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+
+exports.delete = async (req,res,next)=>{
+    try {
+        const hapus = await User.findOne({ where : { email : req.body.email}})
+        if (hapus && hapus.password === req.body.password) {
+            await User.destroy({
                 where : {email : req.body.email}
             })
-            .then(()=>{
-                return res.status(200).json(`your account removed, goodbay ${req.body.email}`)
-            })
-            .catch(err =>{
-                return res.status(200).json(`your account failed, (^_*)`)
-            })
-            return res.status(200).json(`your account removed, goodbay ${req.body.email}`)
+            return res.json(`DELETE SUKSES !!`)
         } else {
-            return res.status(200).json(`remove account failed, email and password not match`)
+            return res.json(`SORY MASUKAN DATA DENGAN BENAR`)
         }
-
     } catch (error) {
         console.log(error)
-        return req.status(500).json(`server error: ${error}`)        
+        return res.json(error)
     }
+  
 }
-
-exports.updateOne = async(req,res,next)=>{
+        
+exports.tampilAll = async (req,res,next)=>{
     try {
-        Item.update({
-              password  : password
-            },
-            {
-                where : {email : email}
-            })
-            .then(item => {
-                console.log(item)
-                return res.status(200).json(item)
-        })
+        const all = await User.findAll()
+        console.log(all)
+        return res.json(all)
     } catch (error) {
         console.log(error)
-        return res.status(500).json(error)
+        return res.json(error)
     }
+
 }
+
+exports.tampilSatu = async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const user = await User.findOne({ where: { id } });
+      if (!user) {
+        return res.status(404).json(`user tidak ada !!!`);
+      }
+      return res.json(user);
+    } catch (error) {
+        console.log(error)
+        return res.json(error)
+    }
+  };
+
+  
