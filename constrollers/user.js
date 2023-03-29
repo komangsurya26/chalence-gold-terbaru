@@ -31,13 +31,12 @@ exports.login = async (req,res,next)=>{
         console.log(error)
         return res.json(error)
     }
-next() 
 }
 
 exports.update = async (req, res, next) => {
     try {
-      const { email, username, password } = req.body;
-      const updates = await User.update({ password }, { where: { email, username } });
+      const { email, username, password_baru} = req.body;
+      const updates = await User.update({password: password_baru}, { where: { email, username } });
       if (updates[0] === 0) {
         return res.status(404).json({ message: 'update gagal !!!' });
       }
