@@ -15,18 +15,6 @@ module.exports = {
       id_order: {
         type: Sequelize.STRING
       },
-      alamat: {
-        type: Sequelize.STRING
-      },
-      jumlah: {
-        type: Sequelize.STRING
-      },
-      subtotal: {
-        type: Sequelize.STRING
-      },
-      total_harga: {
-        type: Sequelize.STRING
-      },
       status_order: {
         type: Sequelize.STRING
       },

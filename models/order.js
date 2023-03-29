@@ -16,10 +16,6 @@ module.exports = (sequelize, DataTypes) => {
   Order.init({
     id_produk: DataTypes.STRING,
     id_order: DataTypes.STRING,
-    alamat: DataTypes.STRING,
-    jumlah: DataTypes.STRING,
-    subtotal: DataTypes.STRING,
-    total_harga: DataTypes.STRING,
     status_order: DataTypes.STRING
   }, {
     sequelize,
