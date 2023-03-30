@@ -1,5 +1,5 @@
 const { where } = require('sequelize')
-const {User,Items} = require('../../models')
+const {User,Items} = require('../models')
 
 exports.register = async (req,res,next)=>{
     try {
