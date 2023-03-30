@@ -39,9 +39,9 @@ exports.tampilAll = async(req,res,next)=>{
 
 exports.tampilSatu = async(req,res,next)=>{
     try {
-        const {id} = req.params
+        const {id_pelanggan} = req.params
         const item = await Items.findOne({
-            where: {id},
+            where: {id_pelanggan},
             include: [{
                 model: User
             }]

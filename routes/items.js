@@ -4,7 +4,7 @@ const router = require('express').Router()
 router
     .post('/create',ctrl.tambahItem)
     .get('/all',ctrl.tampilAll)
-    .get('/:id',ctrl.tampilSatu)
+    .get('/:id_pelanggan',ctrl.tampilSatu)
     .put('/update',ctrl.update)
     .delete('/delete/:id',ctrl.delete)
 
