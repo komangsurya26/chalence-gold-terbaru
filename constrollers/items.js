@@ -23,11 +23,13 @@ exports.tambahItem = async(req,res,next)=>{
 
 exports.tampilAll = async(req,res,next)=>{
     try {
-       const all = await Items.findAll({
+       const all = await Items.findAll(
+        {
         include: [{
             model: User
         }]
-    }) 
+    }
+    ) 
     return res.json(all)
     } catch (error) {
         console.log(error)
@@ -39,7 +41,11 @@ exports.tampilSatu = async(req,res,next)=>{
     try {
         const {id} = req.params
         const item = await Items.findOne({
-            where: {id}})
+            where: {id},
+            include: [{
+                model: User
+            }]
+        })
         if (!item) {
             return res.status(404).json(`user tidak ada !!!`);
           }

@@ -1,26 +1,28 @@
-const {Order} = require ('../../models')
+const {Orders, User,Items} = require ('../models')
 
 exports.tambahOrder = async (req,res,next)=>{
 try {
     const{id_order,alamat,status} = req.body
-    if (!id_order || !alamat || !status) {
-        return res.status(400).json({ error: 'Data tidak lengkap!' })
-    } 
-    const order = await Order.create({
-        id_order : id_order,
-        alamat : alamat,
-        status : status
+    const order = await Orders.create({
+        id_order,
+        alamat,
+        status
     })
+    console.log(order)
     return res.json({message : "sukses order !!!"})
  } catch (error) {
-    console.error
+    console.log(error)
     return res.json(error)
     }
 }
 
 exports.tampilSemua = async (req,res,next)=>{
     try {
-        const all = await Order.findAll()
+        const all = await Orders.findAll({
+            include: [{
+                model: Items
+            }]
+        })
         return res.json(all)
     } catch (error) {
         console.log(error)
@@ -31,12 +33,17 @@ exports.tampilSemua = async (req,res,next)=>{
 exports.tampilSatu = async (req,res,next)=>{
     try {
         const {id} = req.params
-        const satu = await Order.findOne({where : {id}})
+        const satu = await Orders.findOne({
+            where : {id},
+            include: [{
+                model: Items
+            }]
+        })
         if (!satu) {
             return res.json(`data ${id} tidak ada boss !!!`)
         }
         console.log(satu)
-        return res.jso(satu)
+        return res.json(satu)
     } catch (error) {
         console.log(error)
         return res.json(error)
@@ -46,7 +53,7 @@ exports.tampilSatu = async (req,res,next)=>{
 exports.update = async (req,res,next)=>{
     try {
         const {status} =req.body
-        const updates = await Order.update({
+        const updates = await Orders.update({
             status
         },{
             where : {id_order : req.body.id_order}
@@ -63,11 +70,11 @@ exports.update = async (req,res,next)=>{
 
 exports.delete = async (req,res,next)=>{
     try {
-        const order = await Order.findOne({ where: { id_order : req.body.id_order} })
+        const order = await Orders.findOne({ where: { id_order : req.body.id_order} })
         if (!order) {
             return res.status(404).json({ message: `Order dengan id tersebut tidak ada` })
         }
-        const deletes = await Order.destroy({where : {id_order : req.body.id_order}})
+        const deletes = await Orders.destroy({where : {id_order : req.body.id_order}})
         console.log(deletes)
         return res.json({ message: `Order '${order.id_order}' telah dihapus !!!` })
     
