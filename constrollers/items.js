@@ -2,15 +2,15 @@ const {User,Items} = require('../models')
 
 exports.tambahItem = async(req,res,next)=>{
     try {
-       const {id_pelanggan,nama,harga,jumlah,deskripsi} = req.body
+       const {id_item,id_pelanggan,nama,harga} = req.body
        const tambah = await Items.create({
+        id_item,
         id_pelanggan,
         nama,
-        jumlah,
-        harga,
-        deskripsi,
+        harga
+        
     })   
-    if (!id_pelanggan || !nama || !harga || !jumlah || !deskripsi) {
+    if (!id_item|| !id_pelanggan || !nama || !harga) {
         return res.status(400).json({ message: 'inputan gagal !!!' });
       }
     console.log(tambah)
@@ -23,8 +23,12 @@ exports.tambahItem = async(req,res,next)=>{
 
 exports.tampilAll = async(req,res,next)=>{
     try {
-       const all = await Items.findAll()
-       return res.json(all)
+       const all = await Items.findAll({
+        include: [{
+            model: User
+        }]
+    }) 
+    return res.json(all)
     } catch (error) {
         console.log(error)
         return res.status(500).json(error)
@@ -48,14 +52,13 @@ exports.tampilSatu = async(req,res,next)=>{
 
 exports.update = async(req,res,next)=>{
     try {
-       const {id_pelanggan,nama,harga,jumlah,deskripsi} = req.body
+       const {id_item,nama,harga} = req.body
        const updates = await Items.update({
         nama,
-        harga,
-        jumlah,
-        deskripsi
+        harga
+      
     },{
-        where : {id_pelanggan}})
+        where : {id_item}})
     if (updates[0] === 0) {
         return res.status(404).json({ message: 'update gagal !!!' });
       }

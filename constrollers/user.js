@@ -1,5 +1,5 @@
 const { where } = require('sequelize')
-const {User} = require('../models')
+const {User,Items} = require('../../models')
 
 exports.register = async (req,res,next)=>{
     try {
@@ -50,15 +50,9 @@ exports.update = async (req, res, next) => {
 
 exports.delete = async (req,res,next)=>{
     try {
-        const hapus = await User.findOne({ where : { email : req.body.email}})
-        if (hapus && hapus.password === req.body.password) {
-            await User.destroy({
-                where : {email : req.body.email}
-            })
-            return res.json(`DELETE SUKSES !!`)
-        } else {
-            return res.json(`SORY MASUKAN DATA DENGAN BENAR`)
-        }
+       const hapus = await User.destroy({where :{username:req.body.username}})
+       console.log(hapus)
+       return res.json(hapus)
     } catch (error) {
         console.log(error)
         return res.json(error)
@@ -92,4 +86,20 @@ exports.tampilSatu = async (req, res, next) => {
     }
   };
 
+//   exports.delete = async (req,res,next)=>{
+//     try {
+//         const hapus = await User.findOne({ where : { email : req.body.email}})
+//         if (hapus && hapus.password === req.body.password) {
+//             await User.destroy({
+//                 where : {email : req.body.email}
+//             })
+//             return res.json(`DELETE SUKSES !!`)
+//         } else {
+//             return res.json(`SORY MASUKAN DATA DENGAN BENAR`)
+//         }
+//     } catch (error) {
+//         console.log(error)
+//         return res.json(error)
+//     }
   
+// }

@@ -1,15 +1,15 @@
-const {Order} = require ('../models')
+const {Order} = require ('../../models')
 
 exports.tambahOrder = async (req,res,next)=>{
 try {
-    const{id_order,id_produk,status_order} = req.body
-    if (!id_order || !id_produk || !status_order) {
+    const{id_order,alamat,status} = req.body
+    if (!id_order || !alamat || !status) {
         return res.status(400).json({ error: 'Data tidak lengkap!' })
     } 
     const order = await Order.create({
         id_order : id_order,
-        id_produk : id_produk,
-        status_order : status_order
+        alamat : alamat,
+        status : status
     })
     return res.json({message : "sukses order !!!"})
  } catch (error) {
@@ -45,9 +45,9 @@ exports.tampilSatu = async (req,res,next)=>{
 
 exports.update = async (req,res,next)=>{
     try {
-        const {status_order} =req.body
+        const {status} =req.body
         const updates = await Order.update({
-            status_order
+            status
         },{
             where : {id_order : req.body.id_order}
         })
